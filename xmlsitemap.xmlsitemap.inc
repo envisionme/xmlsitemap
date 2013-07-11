@@ -37,6 +37,12 @@ class XMLSitemapWriter extends XMLWriter {
   }
 
   public function openUri($uri) {
+    // If download method is set to 'public', we find the absolute path
+    // of Drupal's root, so that realpath() won't return FALSE
+    if (variable_get('file_downloads', '1') == '1') {
+      $uri = realpath('.') . '/' . $uri;
+    }
+
     if ($realpath = realpath($uri)) {
       // Convert to a real path if possible. Sometimes this function returns
       // a FALSE value, so use the original value when that happens.
